@@ -58,6 +58,58 @@ const perguntas = [
 
 ];
 
+//CONFIGURAÇÕES DO AUDIO DO GAME
+// Cria os objetos de áudio apontando para a pasta src/
+const somFundo    = new Audio("src/som-fundo.mp3");
+const somAcerto   = new Audio("src/acerto.ogg");
+const somErro     = new Audio("src/error.ogg");
+const somVitoria  = new Audio("src/vitoria.ogg");
+const somGameOver = new Audio("src/gameover.ogg");
+
+// Música de fundo fica em loop
+somFundo.loop   = true;
+somFundo.volume = 0.4;  // 50% do volume
+
+// Volume dos efeitos
+somAcerto.volume   = 0.8; //80% do volume
+somErro.volume     = 0.8; 
+somVitoria.volume  = 0.9; //90%...
+somGameOver.volume = 0.9;
+
+// ── Funções chamadas pelo script.js ──────────────────
+
+
+function tocarFundo() {
+  somFundo.currentTime = 0; // volta pro início do som.
+  somFundo.play();
+}
+
+function pararFundo() { //para quando der vitoria ou gameover para o jogador
+  somFundo.pause();
+  somFundo.currentTime = 0;
+}
+
+function tocarAcerto() {
+  somAcerto.currentTime = 0; // reinicia o som, caso o jogador responda rápido a outra pergunta
+  somAcerto.play();
+}
+
+function tocarErro() {
+  somErro.currentTime = 0;
+  somErro.play();
+}
+
+function tocarVitoria() {
+  pararFundo();
+  somVitoria.currentTime = 0;
+  somVitoria.play();
+}
+
+function tocarGameOver() {
+  pararFundo();
+  somGameOver.currentTime = 0;
+  somGameOver.play();
+}
 
 /* ============================================================
    2. VARIÁVEIS DE ESTADO DO JOGO
@@ -192,6 +244,11 @@ function iniciarJogo() {
   pontos      = 0;
   vidas       = 3;
   respondeu   = false;
+
+  // Para a música caso o jogador esteja reiniciando
+  pararFundo();
+  // Inicia a música de fundo (só funciona após clique do usuário)
+  tocarFundo();
 
   mostrarTela(telaJogo);
   carregarPergunta();
@@ -330,18 +387,20 @@ function verificarResposta(valorEscolhido, valorCerto) {
   // Atualiza pontos ou vidas conforme o resultado
   if (acertou) {
     pontos += pontosValem(perguntas[indiceAtual].dif);
+    tocarAcerto();                      // ✅ som de acerto
     mostrarFeedback(true);
   } else {
     vidas--;
+    tocarErro();                        // ❌ som de erro
     mostrarFeedback(false, valorCerto);
   }
 
   /*
     setTimeout(função, milissegundos)
-    Aguarda 1800ms (1,8 segundos) antes de chamar avancar().
+    Aguarda 2500ms (2,5 segundos) antes de chamar avancar().
     Dá tempo para o jogador ver o feedback.
   */
-  setTimeout(avancar, 3000);
+  setTimeout(avancar, 2500); // ajuste este valor conforme a duração do seu som de erro
 }
 
 /*
@@ -379,6 +438,7 @@ function avancar() {
   // Verificação 1: jogador ficou sem vidas?
   if (vidas <= 0) {
     document.getElementById("pontos-gameover").textContent = pontos;
+    tocarGameOver();                    // 💀 som de game over
     mostrarTela(telaGameover);
     return; // para a função aqui
   }
@@ -391,6 +451,7 @@ function avancar() {
     document.getElementById("pontos-vitoria").textContent = pontos;
     document.getElementById("vidas-vitoria").textContent  = vidas;
     document.getElementById("rank-final").textContent     = calcularRank(pontos);
+    tocarVitoria();                     // 🏆 som de vitória
     mostrarTela(telaVitoria);
     return; // para a função aqui
   }

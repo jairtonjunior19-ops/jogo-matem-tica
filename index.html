@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MathQuest 🎮</title>
+  <title>Quiz de Matemática 🎮</title>
 
   <!--
     ============================================================
@@ -19,6 +19,26 @@
 
   <!-- Conecta o arquivo de estilos -->
   <link rel="stylesheet" href="style.css" />
+
+  
+  <!--
+    manifest.json → diz ao celular como instalar o app:
+    nome, cor, ícone, se abre em tela cheia, etc.
+  -->
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- Cor da barra de status do celular (sinal, bateria, relógio) -->
+  <meta name="theme-color" content="#f9c80e" />
+
+  <!--
+    Tags para iPhone/iPad — o iOS não lê o manifest.json
+    completamente, então precisamos desses extras.
+  -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Quiz de Matemática" />
+  <link rel="apple-touch-icon" href="icone-192.png" />
+
 </head>
 
 <body>
@@ -141,6 +161,25 @@
     já foi carregado antes do JavaScript rodar.
   -->
   <script src="script.js"></script>
+
+  <script>
+    /*
+      Registro do Service Worker
+      --------------------------
+      Verifica se o navegador suporta SW (todos os modernos suportam).
+      Se sim, registra sw.js como o Service Worker do app.
+      Isso ativa o modo offline automaticamente.
+    */
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./sw.js")
+        .then(function() {
+          console.log("Service Worker registrado! Jogo funciona offline.");
+        })
+        .catch(function(erro) {
+          console.log("Erro ao registrar Service Worker:", erro);
+        });
+    }
+  </script>
 
 </body>
 </html>

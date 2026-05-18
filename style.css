@@ -59,7 +59,7 @@
    BODY — CORPO DA PÁGINA
 ============================================================ */
 body {
-  background-image: url('./background-img.png');
+  background-image: url('src/background-img.png');
   background-size: cover; /* Faz a imagem cobrir todo o fundo */
   background-position: center; /* Centraliza a imagem */
   background-repeat: no-repeat; /* Evita que a imagem se repita */
@@ -98,7 +98,7 @@ body {
   border-radius: 16px;
   padding: 32px 24px;
   text-align: center;
-  height: 80vh;
+  max-height: 80vh;
 }
 .rodapé{
   margin-top: 75px;
@@ -394,8 +394,11 @@ body {
    RESPONSIVIDADE — adapta para telas menores (celular)
    @media: aplica estilos apenas quando a condição é verdadeira
 ============================================================ */
-@media (max-width: 400px) {
+@media (max-width: 500px) {
   .titulo-jogo    { font-size: 2rem; }
   #texto-pergunta { font-size: 1.1rem; }
   .btn-resposta   { padding: 14px 8px; font-size: 1rem; }
+  body{
+    background-image: url('src/bg-smartphone.png');
+  }
 }
